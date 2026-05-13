@@ -1,4 +1,4 @@
-# Contributing to Bash Template
+# Contributing to Git Repo Reconciler (GRR)
 
 Thank you for your interest in contributing! This project follows a set of guidelines to ensure code quality and consistency.
 
@@ -7,8 +7,8 @@ Thank you for your interest in contributing! This project follows a set of guide
 1. **Fork the repository** on GitHub
 2. **Clone your fork:**
    ```bash
-   git clone https://github.com/PlatformStackPulse/bash-template.git
-   cd bash-template
+   git clone https://github.com/PlatformStackPulse/git-repo-reconciler.git
+   cd git-repo-reconciler
    ```
 
 3. **Setup development environment:**
@@ -80,9 +80,9 @@ All commits must follow the [Conventional Commits](https://www.conventionalcommi
 **Examples:**
 ```
 feat: add support for parallel processing
-feat(cli): add deploy command
-fix: resolve timeout handling
-fix(logger): fix log rotation
+feat(pull): add shallow clone handling
+fix: resolve timeout handling on macOS
+fix(discovery): fix nameref compatibility with Bash 3.2
 docs: update README with examples
 chore: upgrade ShellCheck to latest
 ```
@@ -146,12 +146,15 @@ lib/                # Shared libraries (sourced, not executed)
 ├── config.sh       # Configuration management
 ├── errors.sh       # Error codes and handling
 ├── utils.sh        # Common utilities
-└── version.sh      # Version info
+├── version.sh      # Version info
+├── git.sh          # Atomic git operations
+└── discovery.sh    # Repo discovery & skip patterns
 
 src/                # Executable scripts
 ├── main.sh         # Entry point & dispatcher
 └── commands/       # Subcommand scripts
-    └── hello.sh    # Example command
+    ├── pull.sh     # Bulk-pull reconciliation
+    └── status.sh   # Repository status overview
 
 test/               # BATS tests
 ├── unit/           # Unit tests (mirrors lib/ and src/)
@@ -174,9 +177,9 @@ test/               # BATS tests
 **Integration Tests:**
 ```bash
 @test "full CLI flow works" {
-    run bash src/main.sh hello --name "Test"
+    run bash src/main.sh pull --help
     [ "$status" -eq 0 ]
-    [[ "$output" == *"Hello, Test!"* ]]
+    [[ "$output" == *"--fetch"* ]]
 }
 ```
 

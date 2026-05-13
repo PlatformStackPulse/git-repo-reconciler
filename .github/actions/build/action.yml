@@ -1,5 +1,5 @@
 name: build
-description: GitHub composite action to build bash-template
+description: GitHub composite action to build git-repo-reconciler (grr)
 
 runs:
   using: composite

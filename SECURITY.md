@@ -53,7 +53,7 @@ Security scans run automatically on:
 
 ## Common Shell Script Vulnerabilities
 
-This template is designed to prevent common shell script issues:
+This project is designed to prevent common shell script issues:
 
 - **Command injection** — All variables are quoted
 - **Path traversal** — Paths are validated before use

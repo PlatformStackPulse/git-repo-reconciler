@@ -8,7 +8,7 @@
 #   echo "$DEBUG"
 #
 # Environment variables (all optional, with defaults):
-#   APP_NAME  — Application name (default: "bash-template")
+#   APP_NAME  — Application name (default: "grr")
 #   DEBUG     — Enable debug mode (default: "false")
 #   VERSION   — Application version (default: "dev")
 #   LOG_FILE  — Log file path (default: empty/disabled)
@@ -20,7 +20,7 @@ readonly _CONFIG_SH_LOADED=1
 
 config_load() {
     # Application settings
-    APP_NAME="${APP_NAME:-bash-template}"
+    APP_NAME="${APP_NAME:-grr}"
     DEBUG="${DEBUG:-false}"
     VERSION="${VERSION:-dev}"
     LOG_FILE="${LOG_FILE:-}"

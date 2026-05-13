@@ -5,7 +5,7 @@
 {{ range .Unreleased.CommitGroups -}}
 ### {{ .Title }}
 {{ range .Commits -}}
-- {{ if .Scope }}**{{ .Scope }}:** {{ end }}{{ .Subject }} ([{{ .Hash.Short }}](https://github.com/PlatformStackPulse/bash-template/commit/{{ .Hash.Long }}))
+- {{ if .Scope }}**{{ .Scope }}:** {{ end }}{{ .Subject }} ([{{ .Hash.Short }}](https://github.com/PlatformStackPulse/git-repo-reconciler/commit/{{ .Hash.Long }}))
 {{ end }}
 {{ end }}
 {{ else -}}
@@ -18,7 +18,7 @@
 {{ range .CommitGroups -}}
 ### {{ .Title }}
 {{ range .Commits -}}
-- {{ if .Scope }}**{{ .Scope }}:** {{ end }}{{ .Subject }} ([{{ .Hash.Short }}](https://github.com/PlatformStackPulse/bash-template/commit/{{ .Hash.Long }}))
+- {{ if .Scope }}**{{ .Scope }}:** {{ end }}{{ .Subject }} ([{{ .Hash.Short }}](https://github.com/PlatformStackPulse/git-repo-reconciler/commit/{{ .Hash.Long }}))
 {{ end }}
 {{ end }}
 

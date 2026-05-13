@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: bash-template-dev
+    container_name: grr-dev
     volumes:
       - .:/app
     working_dir: /app
@@ -15,7 +15,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: bash-template-test
+    container_name: grr-test
     volumes:
       - .:/app
     working_dir: /app
@@ -23,7 +23,7 @@ services:
 
   lint:
     image: koalaman/shellcheck-alpine:stable
-    container_name: bash-template-lint
+    container_name: grr-lint
     volumes:
       - .:/app
     working_dir: /app

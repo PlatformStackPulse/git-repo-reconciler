@@ -1,35 +1,40 @@
-# Bash Template - Streamlined & Ready
+# GRR — Architecture & Design Guide
 
-A **slim, production-ready** Bash project template for CLI tools and automation scripts.
+An overview of the design patterns, project structure, and conventions used in Git Repo Reconciler.
 
-## Actual Project Stats
+## Project Stats
 
-- **Shell Files**: 10 (5 lib + 2 src + 3 test files)
-- **Main Codebase**: ~300 LOC (without tests)
+- **Shell Files**: 10 (7 lib + 2 src commands + 1 entry point)
+- **Test Files**: 9 (7 unit + 1 integration + 1 helper)
 - **Test Framework**: BATS (Bash Automated Testing System)
 - **Workflows**: 6 GitHub Actions workflows
 - **Dependencies**: ShellCheck, shfmt, BATS (dev only)
 
-## Core File Structure Breakdown
+## Project Structure
 
 ```
-bash-template/
+git-repo-reconciler/
 ├── src/
-│   ├── main.sh                     # Entry point & dispatcher (~50 lines)
+│   ├── main.sh                     # Entry point & command dispatcher
 │   └── commands/
-│       └── hello.sh                # Example command (remove/rename)
+│       ├── pull.sh                 # Bulk-pull reconciliation command
+│       └── status.sh              # Repository status overview command
 ├── lib/
 │   ├── logging.sh                  # Structured logging (colored, leveled)
 │   ├── config.sh                   # Config loading (env vars + defaults)
 │   ├── errors.sh                   # Error codes & handling
 │   ├── utils.sh                    # Common utilities (validation, etc.)
-│   └── version.sh                  # Version info (injected at build)
+│   ├── version.sh                  # Version info (injected at build)
+│   ├── git.sh                      # Atomic git operations (fetch, pull, reset, etc.)
+│   └── discovery.sh                # Repo discovery & skip patterns
 ├── test/
 │   ├── unit/
-│   │   ├── logging_test.bats
-│   │   ├── config_test.bats
-│   │   ├── errors_test.bats
 │   │   ├── commands_test.bats
+│   │   ├── config_test.bats
+│   │   ├── discovery_test.bats
+│   │   ├── errors_test.bats
+│   │   ├── git_test.bats
+│   │   ├── logging_test.bats
 │   │   └── utils_test.bats
 │   ├── integration/
 │   │   └── flow_test.bats
@@ -42,7 +47,7 @@ bash-template/
 │   └── apply-branch-protection.sh  # GitHub branch protection
 ├── .github/
 │   ├── workflows/                  # 6 CI/CD workflows
-│   ├── actions/                    # 2 composite actions
+│   ├── actions/                    # Composite actions
 │   ├── ISSUE_TEMPLATE/             # Bug report & feature request
 │   ├── CODEOWNERS
 │   └── pull_request_template.md
@@ -68,10 +73,11 @@ bash-template/
 - CLI framework (argument parsing, help, version, subcommands)
 - Structured logging (colored, leveled, file logging)
 - Configuration management (environment variables + defaults)
-- Comprehensive testing with BATS
-- Enterprise CI/CD (GitHub Actions)
+- Portable timeout wrapper (works on both Linux and macOS)
+- Bash 3.2+ compatibility (no namerefs or Bash 4-only features)
+- Comprehensive testing with BATS (66 tests)
+- Enterprise CI/CD (GitHub Actions — Ubuntu + macOS)
 - Docker support
-- DevContainer support
 - Static analysis (ShellCheck, shfmt)
 - Git hooks & branch protection
 - Conventional Commits & changelog
@@ -81,22 +87,7 @@ bash-template/
 - No bloated framework abstractions
 - No unused utility functions
 
-## Customization Checklist
-
-When creating a new project from this template:
-
-1. [ ] Update `README.md` with your project description
-2. [ ] Rename `APP_NAME` in `lib/config.sh` default
-3. [ ] Rename `BINARY_NAME` in `Makefile`
-4. [ ] Replace `src/commands/hello.sh` with your commands
-5. [ ] Update `src/main.sh` command dispatch
-6. [ ] Update `.github/CODEOWNERS`
-7. [ ] Update `CHANGELOG.md` and `.chglog/` repository URL
-8. [ ] Add your libraries to `lib/`
-9. [ ] Add tests to `test/unit/` and `test/integration/`
-10. [ ] Run `make all` to verify everything works
-
-## Key Features
+## Key Design Patterns
 
 ### 1. Library Pattern (Source, Don't Execute)
 
@@ -104,6 +95,8 @@ Libraries in `lib/` are **sourced**, not executed:
 ```bash
 source "$LIB_DIR/logging.sh"
 source "$LIB_DIR/config.sh"
+source "$LIB_DIR/git.sh"
+source "$LIB_DIR/discovery.sh"
 ```
 
 Each library has a **double-source guard**:
@@ -117,8 +110,8 @@ readonly _LOGGING_SH_LOADED=1
 Commands live in `src/commands/` and are dispatched from `main.sh`:
 ```bash
 case "$command" in
-    hello)  shift; source "$SRC_DIR/commands/hello.sh"; hello_run "$@" ;;
-    deploy) shift; source "$SRC_DIR/commands/deploy.sh"; deploy_run "$@" ;;
+    pull)   shift; source "$SRC_DIR/commands/pull.sh"; pull_run "$@" ;;
+    status) shift; source "$SRC_DIR/commands/status.sh"; status_run "$@" ;;
 esac
 ```
 
@@ -130,19 +123,21 @@ Following `set -euo pipefail` best practices:
 - `pushd/popd` (not `cd/cd -`)
 - `find -print0` with `read -r -d ''`
 - All variables quoted: `"$var"`
+- Portable timeout wrapper (`_git_timeout`) for macOS compatibility
+- `eval`-based array passing instead of `local -n` namerefs (Bash 3.2 compat)
 
 ### 4. Build System
 
 `scripts/build.sh` bundles all libraries and commands into a single portable script:
 ```bash
 make build
-# Creates: bin/bash-template (self-contained, no dependencies)
+# Creates: bin/grr (self-contained, no dependencies)
 ```
 
 ### 5. Testing with BATS
 
 ```bash
-make test          # All tests
-make test-unit     # Unit tests only
+make test              # All tests (66 tests)
+make test-unit         # Unit tests only
 make test-integration  # Integration tests
 ```

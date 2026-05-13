@@ -116,12 +116,12 @@ jobs:
 
       - name: Verify build artifact
         run: |
-          test -f bin/bash-template
-          bin/bash-template --version
+          test -f bin/grr
+          bin/grr --version
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: bash-template-binary
-          path: bin/bash-template
+          name: grr-binary
+          path: bin/grr
           retention-days: 7

@@ -27,12 +27,12 @@ jobs:
       - name: Build
         run: |
           chmod +x scripts/build.sh
-          BINARY_NAME=bash-template scripts/build.sh "${{ steps.version.outputs.version }}"
+          scripts/build.sh "${{ steps.version.outputs.version }}"
 
       - name: Package release artifacts
         run: |
           mkdir -p dist
-          cp bin/bash-template "dist/bash-template-${{ steps.version.outputs.version }}-linux-amd64"
+          cp bin/grr "dist/grr-${{ steps.version.outputs.version }}-linux-amd64"
           cd dist && sha256sum * > SHA256SUMS
 
       - name: Upload artifacts

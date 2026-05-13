@@ -2,7 +2,7 @@ style: github
 template: CHANGELOG.tpl.md
 info:
   title: CHANGELOG
-  repository_url: https://github.com/PlatformStackPulse/bash-template
+  repository_url: https://github.com/PlatformStackPulse/git-repo-reconciler
 options:
   commits:
     filters:
