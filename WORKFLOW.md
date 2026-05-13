@@ -86,7 +86,7 @@ scripts/apply-branch-protection.sh
 
 Optional overrides:
 ```bash
-GITHUB_OWNER=PlatformStackPulse GITHUB_REPO=bash-template BRANCH=main scripts/apply-branch-protection.sh
+GITHUB_OWNER=PlatformStackPulse GITHUB_REPO=git-repo-reconciler BRANCH=main scripts/apply-branch-protection.sh
 ```
 
 ## Quick Apply Checklist (GitHub UI)

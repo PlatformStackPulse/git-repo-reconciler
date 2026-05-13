@@ -6,7 +6,7 @@
 #   - GITHUB_TOKEN env var with repo admin permissions
 # Optional:
 #   - GITHUB_OWNER (default: PlatformStackPulse)
-#   - GITHUB_REPO (default: bash-template)
+#   - GITHUB_REPO (default: git-repo-reconciler)
 #   - BRANCH (default: main)
 
 set -euo pipefail
@@ -28,7 +28,7 @@ if [[ -z "${GITHUB_TOKEN:-}" ]]; then
 fi
 
 GITHUB_OWNER="${GITHUB_OWNER:-PlatformStackPulse}"
-GITHUB_REPO="${GITHUB_REPO:-bash-template}"
+GITHUB_REPO="${GITHUB_REPO:-git-repo-reconciler}"
 BRANCH="${BRANCH:-main}"
 
 API_URL="https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/branches/${BRANCH}/protection"

@@ -25,6 +25,7 @@ FROM ubuntu:24.04
 RUN apt-get update && apt-get install -y --no-install-recommends \
     bash \
     coreutils \
+    git \
     curl \
     jq \
     && rm -rf /var/lib/apt/lists/*
@@ -35,8 +36,8 @@ WORKDIR /app
 RUN groupadd -g 1000 app && \
     useradd -u 1000 -g app -s /bin/bash app
 
-COPY --from=base /app/bin/bash-template /usr/local/bin/bash-template
+COPY --from=base /app/bin/grr /usr/local/bin/grr
 
 USER app
 
-ENTRYPOINT ["bash-template"]
+ENTRYPOINT ["grr"]

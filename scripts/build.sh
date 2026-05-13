@@ -13,7 +13,7 @@ BASH_VER="$(bash --version | head -1 | awk '{print $4}')"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 BIN_DIR="$PROJECT_ROOT/bin"
-BINARY_NAME="${BINARY_NAME:-bash-template}"
+BINARY_NAME="${BINARY_NAME:-grr}"
 
 mkdir -p "$BIN_DIR"
 

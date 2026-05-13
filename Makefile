@@ -1,7 +1,7 @@
 .PHONY: help build run test clean lint fmt security coverage install dev-setup changelog changelog-check
 
 # Variables
-BINARY_NAME=bash-template
+BINARY_NAME=grr
 VERSION?=dev
 COMMIT?=$(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 BUILD_TIME?=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
@@ -20,7 +20,7 @@ build: ## Build the application (bundle into bin/)
 	@echo "Build complete: bin/$(BINARY_NAME)"
 
 run: build ## Build and run the application
-	@bin/$(BINARY_NAME) hello
+	@bin/$(BINARY_NAME) --help
 
 test: ## Run all tests (BATS)
 	@echo "Running tests..."

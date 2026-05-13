@@ -10,7 +10,7 @@ setup() {
 
 @test "config_load sets defaults" {
     config_load
-    [ "$APP_NAME" = "bash-template" ]
+    [ "$APP_NAME" = "grr" ]
     [ "$DEBUG" = "false" ]
     [ "$VERSION" = "dev" ]
     [ "$LOG_FILE" = "" ]
