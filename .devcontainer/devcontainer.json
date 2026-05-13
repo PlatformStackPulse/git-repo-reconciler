@@ -1,0 +1,33 @@
+{
+  "name": "bash-template",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "timonwong.shellcheck",
+        "foxundermoon.shell-format",
+        "github.copilot",
+        "github.copilot-chat",
+        "mads-hartmann.bash-ide-vscode",
+        "ms-vscode.makefile-tools",
+        "streetsidesoftware.code-spell-checker",
+        "eamodio.gitlens"
+      ],
+      "settings": {
+        "[shellscript]": {
+          "editor.formatOnSave": true,
+          "editor.defaultFormatter": "foxundermoon.shell-format"
+        },
+        "shellcheck.enable": true,
+        "shellcheck.run": "onSave",
+        "shellcheck.executablePath": "shellcheck",
+        "shellformat.flag": "-i 4 -ci"
+      }
+    }
+  },
+  "postCreateCommand": "make dev-setup",
+  "remoteUser": "vscode"
+}

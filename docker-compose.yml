@@ -1,0 +1,31 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bash-template-dev
+    volumes:
+      - .:/app
+    working_dir: /app
+    environment:
+      - DEBUG=true
+    command: bash src/main.sh hello
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bash-template-test
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: make test
+
+  lint:
+    image: koalaman/shellcheck-alpine:stable
+    container_name: bash-template-lint
+    volumes:
+      - .:/app
+    working_dir: /app
+    entrypoint: sh
+    command: -c "find src/ lib/ scripts/ -name '*.sh' -exec shellcheck -x {} +"

@@ -1,0 +1,52 @@
+name: Dependency Management
+
+on:
+  schedule:
+    - cron: "0 0 * * 0"  # Weekly
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-tools:
+    name: Check Tool Versions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check ShellCheck version
+        run: |
+          CURRENT=$(shellcheck --version | grep 'version:' | awk '{print $2}')
+          echo "Current ShellCheck: $CURRENT"
+
+      - name: Check for BATS updates
+        run: |
+          CURRENT=$(bats --version 2>/dev/null || echo "not installed")
+          echo "Current BATS: $CURRENT"
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Run security-level ShellCheck
+        run: find src/ lib/ scripts/ -name '*.sh' -exec shellcheck -S warning -x {} +
+        continue-on-error: true
+
+      - name: Create issue if vulnerabilities found
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Security: ShellCheck warnings detected',
+              body: 'Run `make security` locally to see details.'
+            })

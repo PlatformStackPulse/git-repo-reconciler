@@ -1,0 +1,32 @@
+# Build artifacts
+bin/
+dist/
+
+# Test artifacts
+coverage/
+*.tap
+test_results/
+.bats-battery/
+
+# Log files
+*.log
+
+# Environment files
+.env
+.env.*
+
+# Editor/IDE
+# .idea/
+# .vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+# .idea/
+# .vscode/

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# scripts/commit-msg — Git commit-msg hook
+# Validates commit messages follow Conventional Commits format
+
+set -euo pipefail
+
+COMMIT_MSG_FILE="$1"
+
+if [[ ! -f "$COMMIT_MSG_FILE" ]]; then
+    echo "ERROR: Commit message file not found" >&2
+    exit 1
+fi
+
+COMMIT_MSG=$(head -1 "$COMMIT_MSG_FILE")
+PATTERN='^(feat|fix|docs|style|refactor|perf|test|chore|build|ci|revert)(\(.+\))?!?:\s.{1,}$'
+
+if ! [[ "$COMMIT_MSG" =~ $PATTERN ]]; then
+    echo "ERROR: Commit message does not follow Conventional Commits format."
+    echo ""
+    echo "Expected: <type>(<scope>): <description>"
+    echo "Example:  feat: add new feature"
+    echo "Example:  fix(parser): handle edge case"
+    echo ""
+    echo "Types: feat, fix, docs, style, refactor, perf, test, chore, build, ci, revert"
+    echo ""
+    echo "Your message: $COMMIT_MSG"
+    exit 1
+fi
