@@ -80,13 +80,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Lowercase repo name
+        id: repo_name
+        run: echo "repo=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
+
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ needs.build.outputs.version }}
-            ghcr.io/${{ github.repository }}:latest
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache
-          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache,mode=max
+            ghcr.io/${{ steps.repo_name.outputs.repo }}:${{ needs.build.outputs.version }}
+            ghcr.io/${{ steps.repo_name.outputs.repo }}:latest
+          cache-from: type=registry,ref=ghcr.io/${{ steps.repo_name.outputs.repo }}:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ steps.repo_name.outputs.repo }}:buildcache,mode=max
