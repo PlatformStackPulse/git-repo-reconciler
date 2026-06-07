@@ -1,10 +1,13 @@
 <a name="unreleased"></a>
 ## [Unreleased]
-### Features
-- **clone:** Add native batch cloning from GitHub users or organizations with parallel support.
+- No notable changes.
 
 
-<a name="v0.1.0"></a>
-## [v0.1.0] - 2026-05-13
+<a name="v1.0.1"></a>
+## [v1.0.1] - 2026-06-08
+
+
+<a name="v1.0.0"></a>
+## [v1.0.0] - 2026-05-14
 
 
