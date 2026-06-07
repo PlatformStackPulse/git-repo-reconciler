@@ -36,12 +36,14 @@ When implementing batch operations, follow the pattern in `pull.sh` or `clone.sh
 
 ## 🧪 Testing & Verification
 
-- **BATS:** Use the Bash Automated Testing System.
+- **BATS:** Use the Bash Automated Testing System for both unit and integration tests.
 - **Mocking:** Since pure BATS doesn't have a mocking library, use `mktemp` to create fake git repositories for integration testing.
-- **Standard Checks:** Always run `make lint` (ShellCheck) and `make fmt-check` (shfmt) before committing.
+- **Consistency:** ALWAYS use Makefile targets (`make lint`, `make test`, `make fmt-check`, `make security`, `make vet`) to verify changes. This ensures local checks match CI exactly.
+- **Syntax Check:** Run `make vet` (uses `bash -n`) to catch syntax errors before committing.
 
-## 🚀 Release & Maintenance
+## 🚀 Release & CI/CD
 
+- **Makefile-Driven CI:** The CI pipeline (`.github/workflows/ci.yml`) is driven by Makefile targets. Any change to the build or verification logic should be made in the `Makefile` first.
 - **Versioning:** Follow Semantic Versioning.
 - **Releases:** Triggered via GitHub Actions `version-bump.yml`. Do not manually create tags unless necessary.
 - **Artifacts:** The `release.yml` workflow generates the single portable binary for distribution.
