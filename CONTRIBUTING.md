@@ -153,6 +153,7 @@ lib/                # Shared libraries (sourced, not executed)
 src/                # Executable scripts
 ├── main.sh         # Entry point & dispatcher
 └── commands/       # Subcommand scripts
+    ├── clone.sh    # Batch-clone from GitHub
     ├── pull.sh     # Bulk-pull reconciliation
     └── status.sh   # Repository status overview
 

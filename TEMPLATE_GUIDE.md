@@ -4,8 +4,8 @@ An overview of the design patterns, project structure, and conventions used in G
 
 ## Project Stats
 
-- **Shell Files**: 10 (7 lib + 2 src commands + 1 entry point)
-- **Test Files**: 9 (7 unit + 1 integration + 1 helper)
+- **Shell Files**: 11 (7 lib + 3 src commands + 1 entry point)
+- **Test Files**: 10 (8 unit + 1 integration + 1 helper)
 - **Test Framework**: BATS (Bash Automated Testing System)
 - **Workflows**: 6 GitHub Actions workflows
 - **Dependencies**: ShellCheck, shfmt, BATS (dev only)
