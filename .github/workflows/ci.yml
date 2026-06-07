@@ -22,7 +22,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y shellcheck
 
       - name: Run ShellCheck
-        run: find src/ lib/ scripts/ -name '*.sh' -exec shellcheck -S warning -x {} +
+        run: make lint
 
   format:
     name: Format Check
@@ -37,13 +37,7 @@ jobs:
           chmod +x /usr/local/bin/shfmt
 
       - name: Check formatting
-        run: |
-          UNFORMATTED=$(find src/ lib/ scripts/ -name '*.sh' -exec shfmt -d -i 4 -ci {} + 2>&1 || true)
-          if [ -n "$UNFORMATTED" ]; then
-            echo "Shell scripts are not formatted:"
-            echo "$UNFORMATTED"
-            exit 1
-          fi
+        run: make fmt-check
 
   test:
     name: Test
@@ -63,7 +57,7 @@ jobs:
           fi
 
       - name: Run tests
-        run: bats test/unit/ test/integration/
+        run: make test
 
   security:
     name: Security Scans
@@ -74,11 +68,11 @@ jobs:
       - name: Install ShellCheck
         run: sudo apt-get update && sudo apt-get install -y shellcheck
 
-      - name: Run ShellCheck (warning level)
-        run: find src/ lib/ scripts/ -name '*.sh' -exec shellcheck -S warning -x -f gcc {} +
+      - name: Run security checks
+        run: make security
 
       - name: Syntax check all scripts
-        run: find src/ lib/ -name '*.sh' -exec bash -n {} +
+        run: make vet
 
   commit-lint:
     name: Commit Lint
