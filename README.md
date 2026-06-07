@@ -17,6 +17,7 @@
 **GRR** is a CLI tool that finds all git repositories under a directory and reconciles them — fetching, pulling, stashing, resetting, and cleaning — in a single command. Built for developers and platform engineers managing many repos locally.
 
 **Features:**
+- Batch-clone all repositories from a GitHub User or Organization
 - Discover and pull all git repos in a directory tree
 - Parallel execution for speed (`-p N`)
 - Safe pipeline: fetch → status-check → stash → checkout → reset → clean → pull
@@ -84,7 +85,20 @@ grr --version
 
 ## Commands
 
-### `grr pull` — Reconcile repositories
+### \`grr clone\` — Batch clone repositories
+
+\`\`\`bash
+# Clone all repositories from an account (User or Org)
+grr clone PlatformStackPulse ./my-repos
+
+# Fast parallel clone with 4 jobs
+grr clone PlatformStackPulse -p 4
+
+# Preview what would be cloned
+grr clone PlatformStackPulse --dry-run
+\`\`\`
+
+### \`grr pull\` — Reconcile repositories
 
 ```bash
 # Recommended: safe pull with full features
@@ -202,6 +216,19 @@ make security      # Security checks
 make clean         # Clean build artifacts
 make dev-setup     # Install dev tools + git hooks
 ```
+
+---
+
+## Releasing New Versions
+
+Releases are automated via GitHub Actions. To publish a new version:
+
+1.  **Bump Version:** Go to the **Actions** tab in GitHub and select the **Update Version** workflow.
+2.  **Run Workflow:** Click **Run workflow**, choose the version bump type (patch, minor, or major), and run it on the `main` branch.
+3.  **Automated Release:** This will automatically create a new git tag. The **Release** workflow will then trigger to:
+    *   Build the single portable binary.
+    *   Generate a GitHub Release with the binary attached as an artifact.
+    *   Publish a new Docker image to GitHub Container Registry (GHCR).
 
 ---
 

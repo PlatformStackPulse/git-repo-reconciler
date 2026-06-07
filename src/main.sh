@@ -39,6 +39,7 @@ GRR — Git Repo Reconciler
 Bulk-update, inspect, and reconcile git repositories at scale.
 
 COMMANDS:
+    clone       Batch clone repositories from a GitHub account
     pull        Reconcile (pull) all repos in a directory
     status      Show status of all repos in a directory
 
@@ -51,6 +52,7 @@ GLOBAL OPTIONS:
 Run '$(basename "$0") COMMAND --help' for command-specific help.
 
 EXAMPLES:
+    $(basename "$0") clone PlatformStackPulse ./my-repos -p 4
     $(basename "$0") pull --fetch --stash -V /repos
     $(basename "$0") pull -d --fetch /repos
     $(basename "$0") status /repos
@@ -100,6 +102,12 @@ main() {
     # Command dispatch
     local command="${1:-}"
     case "$command" in
+        clone)
+            shift
+            # shellcheck source=commands/clone.sh
+            source "$SRC_DIR/commands/clone.sh"
+            clone_run "$@"
+            ;;
         pull)
             shift
             # shellcheck source=commands/pull.sh
