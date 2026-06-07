@@ -33,8 +33,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Non-root user
-RUN groupadd -g 1000 app && \
-    useradd -u 1000 -g app -s /bin/bash app
+RUN groupadd -g 2000 app && \
+    useradd -u 2000 -g app -s /bin/bash app
 
 COPY --from=base /app/bin/grr /usr/local/bin/grr
 
