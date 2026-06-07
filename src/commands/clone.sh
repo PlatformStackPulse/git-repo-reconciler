@@ -185,12 +185,12 @@ clone_run() {
     local page=1
     local repo_names=()
     local repo_urls=()
-    
+
     while true; do
         log_debug "Fetching page $page..."
         local res
         res=$(curl -s "${headers[@]}" "https://api.github.com/$type_path/$account/repos?per_page=100&page=$page")
-        
+
         # Check for errors in API response
         if echo "$res" | jq -e 'type == "object" and .message != null' >/dev/null; then
             local message
