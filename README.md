@@ -176,6 +176,20 @@ Outputs a table with repository name, branch, state (clean/dirty), and remote UR
 
 ---
 
+## Documentation
+
+For more detailed information, see the following documentation:
+
+- [CHANGELOG.md](CHANGELOG.md) — Project change history and release notes.
+- [CONTRIBUTING.md](CONTRIBUTING.md) — Guidelines for contributing, coding standards, and development workflow.
+- [SECURITY.md](SECURITY.md) — Security policy, vulnerability reporting, and scanning procedures.
+- [SKILL.md](SKILL.md) — AI-specific implementation patterns and project-specific skills.
+- [TEMPLATE_GUIDE.md](TEMPLATE_GUIDE.md) — Deep dive into the architecture, design patterns, and project structure.
+- [WORKFLOW.md](WORKFLOW.md) — Detailed CI/CD workflow and branch protection configuration.
+- [GEMINI.md](GEMINI.md) — Foundational instructions and learned context for AI agents.
+
+---
+
 ## Project Structure
 
 ```
