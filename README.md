@@ -17,6 +17,7 @@
 **GRR** is a CLI tool that finds all git repositories under a directory and reconciles them — fetching, pulling, stashing, resetting, and cleaning — in a single command. Built for developers and platform engineers managing many repos locally.
 
 **Features:**
+
 - Batch-clone all repositories from a GitHub User or Organization
 - Discover and pull all git repos in a directory tree
 - Parallel execution for speed (`-p N`)
@@ -85,9 +86,9 @@ grr --version
 
 ## Commands
 
-### \`grr clone\` — Batch clone repositories
+### `grr clone` — Batch clone repositories
 
-\`\`\`bash
+```bash
 # Clone all repositories from an account (User or Org)
 grr clone PlatformStackPulse ./my-repos
 
@@ -96,9 +97,9 @@ grr clone PlatformStackPulse -p 4
 
 # Preview what would be cloned
 grr clone PlatformStackPulse --dry-run
-\`\`\`
+```
 
-### \`grr pull\` — Reconcile repositories
+### `grr pull` — Reconcile repositories
 
 ```bash
 # Recommended: safe pull with full features
@@ -118,6 +119,7 @@ grr pull --fetch --stash --submodules --verify --gc /repos
 ```
 
 **Pipeline steps (in order):**
+
 1. `--fetch` — Fetch all remotes with pruning and tags
 2. `--check-status` — Warn about uncommitted changes
 3. `--handle-shallow` — Convert shallow clones to full repos
@@ -148,31 +150,31 @@ Outputs a table with repository name, branch, state (clean/dirty), and remote UR
 
 ### Global Options
 
-| Flag | Description |
-|------|-------------|
-| `-h, --help` | Show help |
-| `-v, --version` | Show version |
+| Flag            | Description         |
+| --------------- | ------------------- |
+| `-h, --help`    | Show help           |
+| `-v, --version` | Show version        |
 | `-V, --verbose` | Enable debug output |
-| `--log FILE` | Log to file |
+| `--log FILE`    | Log to file         |
 
 ### Pull Options
 
-| Flag | Description |
-|------|-------------|
-| `-d, --dry-run` | Preview without changes |
-| `-p, --parallel N` | Run N parallel jobs (default: 1) |
+| Flag                   | Description                                    |
+| ---------------------- | ---------------------------------------------- |
+| `-d, --dry-run`        | Preview without changes                        |
+| `-p, --parallel N`     | Run N parallel jobs (default: 1)               |
 | `-b, --branches B1,B2` | Branches to try (default: master,main,develop) |
-| `-s, --skip PATTERN` | Skip repos matching pattern (repeatable) |
-| `-t, --timeout SECS` | Git operation timeout (default: 300) |
-| `--fetch` | Fetch remotes first |
-| `--stash` | Stash changes before pulling |
-| `--check-status` | Warn about uncommitted changes |
-| `--submodules` | Update submodules recursively |
-| `--verify` | Show recent commits after pull |
-| `--handle-shallow` | Convert shallow clones |
-| `--gc` | Garbage collect after pull |
-| `--strict` | Fail on first error |
-| `--max-log N` | Commits to show with --verify (default: 3) |
+| `-s, --skip PATTERN`   | Skip repos matching pattern (repeatable)       |
+| `-t, --timeout SECS`   | Git operation timeout (default: 300)           |
+| `--fetch`              | Fetch remotes first                            |
+| `--stash`              | Stash changes before pulling                   |
+| `--check-status`       | Warn about uncommitted changes                 |
+| `--submodules`         | Update submodules recursively                  |
+| `--verify`             | Show recent commits after pull                 |
+| `--handle-shallow`     | Convert shallow clones                         |
+| `--gc`                 | Garbage collect after pull                     |
+| `--strict`             | Fail on first error                            |
+| `--max-log N`          | Commits to show with --verify (default: 3)     |
 
 ---
 
@@ -197,6 +199,7 @@ git-repo-reconciler/
 ├── src/
 │   ├── main.sh                  # Entry point & command dispatcher
 │   └── commands/
+│       ├── clone.sh             # Batch-clone repositories from GitHub
 │       ├── pull.sh              # Bulk-pull reconciliation command
 │       └── status.sh            # Status overview command
 ├── lib/
@@ -241,10 +244,7 @@ Releases are automated via GitHub Actions. To publish a new version:
 
 1.  **Bump Version:** Go to the **Actions** tab in GitHub and select the **Update Version** workflow.
 2.  **Run Workflow:** Click **Run workflow**, choose the version bump type (patch, minor, or major), and run it on the `main` branch.
-3.  **Automated Release:** This creates an annotated git tag and explicitly dispatches the **Release** workflow, which will:
-    *   Build the single portable binary.
-    *   Generate a GitHub Release with the binary attached as an artifact.
-    *   Publish a new Docker image to GitHub Container Registry (GHCR).
+3.  **Automated Release:** This creates an annotated git tag and explicitly dispatches the **Release** workflow, which builds the single portable binary, generates a GitHub Release with the binary attached as an artifact, and publishes a new Docker image to GitHub Container Registry (GHCR).
 
 ---
 

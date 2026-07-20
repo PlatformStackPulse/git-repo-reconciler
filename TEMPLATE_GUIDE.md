@@ -17,8 +17,9 @@ git-repo-reconciler/
 ├── src/
 │   ├── main.sh                     # Entry point & command dispatcher
 │   └── commands/
+│       ├── clone.sh                # Batch-clone repositories from GitHub
 │       ├── pull.sh                 # Bulk-pull reconciliation command
-│       └── status.sh              # Repository status overview command
+│       └── status.sh               # Repository status overview command
 ├── lib/
 │   ├── logging.sh                  # Structured logging (colored, leveled)
 │   ├── config.sh                   # Config loading (env vars + defaults)
@@ -29,6 +30,7 @@ git-repo-reconciler/
 │   └── discovery.sh                # Repo discovery & skip patterns
 ├── test/
 │   ├── unit/
+│   │   ├── clone_test.bats
 │   │   ├── commands_test.bats
 │   │   ├── config_test.bats
 │   │   ├── discovery_test.bats
@@ -69,13 +71,14 @@ git-repo-reconciler/
 ## Design Philosophy
 
 **What's Included:**
+
 - Clean project structure (lib/src/test separation)
 - CLI framework (argument parsing, help, version, subcommands)
 - Structured logging (colored, leveled, file logging)
 - Configuration management (environment variables + defaults)
 - Portable timeout wrapper (works on both Linux and macOS)
 - Bash 3.2+ compatibility (no namerefs or Bash 4-only features)
-- Comprehensive testing with BATS (66 tests)
+- Comprehensive testing with BATS (72 tests)
 - Enterprise CI/CD (GitHub Actions — Ubuntu + macOS)
 - Docker support
 - Static analysis (ShellCheck, shfmt)
@@ -83,6 +86,7 @@ git-repo-reconciler/
 - Conventional Commits & changelog
 
 **What's NOT Included (Keep it Slim!):**
+
 - No Python/Ruby/Node.js dependencies
 - No bloated framework abstractions
 - No unused utility functions
@@ -92,6 +96,7 @@ git-repo-reconciler/
 ### 1. Library Pattern (Source, Don't Execute)
 
 Libraries in `lib/` are **sourced**, not executed:
+
 ```bash
 source "$LIB_DIR/logging.sh"
 source "$LIB_DIR/config.sh"
@@ -100,6 +105,7 @@ source "$LIB_DIR/discovery.sh"
 ```
 
 Each library has a **double-source guard**:
+
 ```bash
 [[ -n "${_LOGGING_SH_LOADED:-}" ]] && return 0
 readonly _LOGGING_SH_LOADED=1
@@ -108,8 +114,10 @@ readonly _LOGGING_SH_LOADED=1
 ### 2. Subcommand Pattern
 
 Commands live in `src/commands/` and are dispatched from `main.sh`:
+
 ```bash
 case "$command" in
+    clone)  shift; source "$SRC_DIR/commands/clone.sh"; clone_run "$@" ;;
     pull)   shift; source "$SRC_DIR/commands/pull.sh"; pull_run "$@" ;;
     status) shift; source "$SRC_DIR/commands/status.sh"; status_run "$@" ;;
 esac
@@ -118,6 +126,7 @@ esac
 ### 3. Safe Bash Patterns
 
 Following `set -euo pipefail` best practices:
+
 - `if [[ test ]]; then action; fi` (not `[[ test ]] && action`)
 - `var=$(( var + 1 ))` (not `((var++))`)
 - `pushd/popd` (not `cd/cd -`)
@@ -129,6 +138,7 @@ Following `set -euo pipefail` best practices:
 ### 4. Build System
 
 `scripts/build.sh` bundles all libraries and commands into a single portable script:
+
 ```bash
 make build
 # Creates: bin/grr (self-contained, no dependencies)
@@ -137,7 +147,7 @@ make build
 ### 5. Testing with BATS
 
 ```bash
-make test              # All tests (66 tests)
+make test              # All tests (72 tests)
 make test-unit         # Unit tests only
 make test-integration  # Integration tests
 ```
