@@ -70,6 +70,23 @@ teardown() {
     [[ "$output" == *"repo-alpha"* ]]
 }
 
+@test "full flow: parallel pull with local repositories" {
+    mkdir -p "$TEST_DIR/repo-beta"
+    cd "$TEST_DIR/repo-beta"
+    git init -q
+    git config user.email "test@test.com"
+    git config user.name "Test"
+    echo "beta" > file.txt
+    git add .
+    git commit -q -m "initial commit"
+    cd "$PROJECT_ROOT"
+
+    run bash "$PROJECT_ROOT/src/main.sh" pull --parallel 2 "$TEST_DIR"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"repo-alpha"* ]]
+    [[ "$output" == *"repo-beta"* ]]
+}
+
 @test "full flow: status with local repo" {
     run bash "$PROJECT_ROOT/src/main.sh" status "$TEST_DIR"
     [ "$status" -eq 0 ]

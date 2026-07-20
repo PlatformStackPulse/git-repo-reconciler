@@ -15,12 +15,13 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   bump-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -33,7 +34,7 @@ jobs:
         id: current
         run: |
           VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Calculate new version
         id: bump
@@ -59,17 +60,14 @@ jobs:
           esac
 
           NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Create tag
+      - name: Create and push tag
         run: |
-          git tag ${{ steps.bump.outputs.new_version }}
-          git push origin ${{ steps.bump.outputs.new_version }}
+          git tag -a "${{ steps.bump.outputs.new_version }}" -m "Release ${{ steps.bump.outputs.new_version }}"
+          git push origin "${{ steps.bump.outputs.new_version }}"
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.bump.outputs.new_version }}
-          generate_release_notes: true
+      - name: Trigger release workflow
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run release.yml --ref main -f tag="${{ steps.bump.outputs.new_version }}"

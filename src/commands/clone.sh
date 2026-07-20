@@ -235,12 +235,9 @@ clone_run() {
         tmpdir=$(mktemp -d)
         trap 'rm -rf "$tmpdir"' EXIT
 
-        local running=0 i=0
+        local i=0
         for ((i = 0; i < total; i++)); do
-            while [[ $running -ge $parallel ]]; do
-                wait -n 2>/dev/null || true
-                running=$(jobs -rp | wc -l)
-            done
+            wait_for_job_slot "$parallel"
 
             (
                 local result
@@ -251,7 +248,6 @@ clone_run() {
                 fi
                 echo "$result" >"$tmpdir/job_$i"
             ) &
-            running=$(jobs -rp | wc -l)
         done
         wait
 

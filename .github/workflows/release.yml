@@ -21,7 +21,7 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -29,9 +29,15 @@ jobs:
         id: version
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "version=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
+            tag="${{ github.event.inputs.tag }}"
+            git rev-parse --verify --quiet "${tag}^{commit}" >/dev/null || {
+              echo "Tag does not exist: ${tag}" >&2
+              exit 1
+            }
+            git checkout --detach "$tag"
+            echo "version=$tag" >> "$GITHUB_OUTPUT"
           else
-            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+            echo "version=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Build
@@ -42,8 +48,8 @@ jobs:
       - name: Package release artifacts
         run: |
           mkdir -p dist
-          cp bin/grr "dist/grr-${{ steps.version.outputs.version }}-linux-amd64"
-          cd dist && sha256sum * > SHA256SUMS
+          cp bin/grr "dist/grr-${{ steps.version.outputs.version }}"
+          cd dist && sha256sum ./* > SHA256SUMS
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -53,7 +59,7 @@ jobs:
           retention-days: 7
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.version }}
           files: dist/*
@@ -68,13 +74,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -82,10 +88,10 @@ jobs:
 
       - name: Lowercase repo name
         id: repo_name
-        run: echo "repo=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
+        run: echo "repo=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
 
       - name: Build and push
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true

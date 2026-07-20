@@ -25,7 +25,7 @@ GRR is a high-performance, modular Bash CLI tool (Bash 3.2+ compatible).
 When implementing batch operations, follow the pattern in `pull.sh` or `clone.sh`:
 - Use a `tmpdir` created via `mktemp -d` for IPC.
 - Spawn background jobs `(...) &`.
-- Limit concurrency using a `while [[ $running -ge $parallel ]]` loop with `wait -n`.
+- Limit concurrency with `wait_for_job_slot` from `lib/utils.sh`; it supports macOS Bash 3.2, unlike `wait -n`.
 - Tally results from the `tmpdir` after `wait`.
 
 ### GitHub API Interaction
