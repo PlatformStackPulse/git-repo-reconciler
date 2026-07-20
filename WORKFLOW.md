@@ -117,7 +117,7 @@ Recommended additional protection toggles:
 
 ### 1. Check Tool Versions
 - **Trigger:** Weekly
-- **Action:** Verify ShellCheck and BATS versions
+- **Action:** Verify ShellCheck and BATS versions; fail on ShellCheck warnings
 - **Config:** `.github/workflows/dependencies.yml`
 
 ### 2. Auto-Fix Formatting
@@ -127,7 +127,7 @@ Recommended additional protection toggles:
 
 ### 3. Version Bumping
 - **Trigger:** Manual (workflow_dispatch)
-- **Action:** Bump version and create release
+- **Action:** Create an annotated semantic-version tag and dispatch the Release workflow for that exact tag
 - **Config:** `.github/workflows/version-bump.yml`
 
 ## Recommended Workflow
@@ -152,6 +152,8 @@ PR Flow:
 - [ ] All tests pass (`make test`)
 - [ ] ShellCheck clean (`make lint`)
 - [ ] Formatting correct (`make fmt-check`)
+- [ ] GitHub Actions syntax clean (`make workflow-lint`)
+- [ ] Full local quality gate passes (`make check`)
 - [ ] Coverage maintained
 - [ ] Commits follow Conventional Commits
 - [ ] PR has approval
@@ -162,6 +164,6 @@ PR Flow:
 1. Create PR to main
 2. Await reviews and checks
 3. Merge to main
-4. Tag with version (`git tag v1.2.3`)
-5. Push tag (`git push origin v1.2.3`)
-6. Release workflow creates GitHub Release + Docker image
+4. Run the **Update Version** workflow for the required semantic version bump
+5. The workflow creates and pushes an annotated tag, then dispatches Release for that exact tag
+6. Release workflow creates the GitHub Release + Docker image

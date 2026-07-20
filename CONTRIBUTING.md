@@ -125,6 +125,7 @@ make coverage       # Generate coverage report (requires kcov)
 ```bash
 make fmt    # Auto-format
 make lint   # Run linter
+make check  # Run lint, format, syntax, security, workflow, test, and build checks
 ```
 
 ### Best Practices
@@ -188,7 +189,7 @@ test/               # BATS tests
 
 1. Create a feature branch from `develop` or `main`
 2. Make your changes with tests
-3. Run `make all` to verify everything passes
+3. Run `make check` to verify all non-destructive checks pass
 4. Push and create a PR
 5. Wait for CI checks to pass
 6. Request review from maintainers

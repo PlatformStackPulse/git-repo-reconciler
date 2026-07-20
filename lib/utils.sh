@@ -35,6 +35,19 @@ require_bash_version() {
     fi
 }
 
+# Wait for a background job when the concurrency limit has been reached.
+# `wait -n` is unavailable in the Bash 3.2 shipped with macOS.
+wait_for_job_slot() {
+    local max_jobs="$1"
+    local job_pid
+
+    while [[ $(jobs -pr | wc -l) -ge "$max_jobs" ]]; do
+        job_pid="$(jobs -pr | head -n 1)"
+        [[ -n "$job_pid" ]] || return 0
+        wait "$job_pid" || true
+    done
+}
+
 # Validate a value is not empty
 validate_not_empty() {
     local name="$1"

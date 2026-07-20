@@ -363,12 +363,9 @@ pull_run() {
         # shellcheck disable=SC2064
         trap "rm -rf '$tmpdir'" EXIT
 
-        local running=0 job_id=0
+        local job_id=0
         for repo in "${repos[@]}"; do
-            while [[ $running -ge $parallel ]]; do
-                wait -n 2>/dev/null || true
-                running=$(jobs -rp | wc -l)
-            done
+            wait_for_job_slot "$parallel"
 
             job_id=$((job_id + 1))
             (
@@ -385,7 +382,6 @@ pull_run() {
                 fi
                 echo "$result" >"$tmpdir/job_${job_id}"
             ) &
-            running=$(jobs -rp | wc -l)
         done
         wait
 

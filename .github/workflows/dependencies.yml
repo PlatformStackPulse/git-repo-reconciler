@@ -6,15 +6,17 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   check-tools:
     name: Check Tool Versions
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+
+      - name: Install ShellCheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
 
       - name: Check ShellCheck version
         run: |
@@ -23,6 +25,7 @@ jobs:
 
       - name: Check for BATS updates
         run: |
+          sudo apt-get update && sudo apt-get install -y bats
           CURRENT=$(bats --version 2>/dev/null || echo "not installed")
           echo "Current BATS: $CURRENT"
 
@@ -30,23 +33,10 @@ jobs:
     name: Security Scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install ShellCheck
         run: sudo apt-get update && sudo apt-get install -y shellcheck
 
       - name: Run security-level ShellCheck
         run: find src/ lib/ scripts/ -name '*.sh' -exec shellcheck -S warning -x {} +
-        continue-on-error: true
-
-      - name: Create issue if vulnerabilities found
-        if: failure()
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: 'Security: ShellCheck warnings detected',
-              body: 'Run `make security` locally to see details.'
-            })

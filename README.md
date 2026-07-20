@@ -1,6 +1,6 @@
 # GRR — Git Repo Reconciler
 
-![Bash Version](https://img.shields.io/badge/Bash-4.0+-blue?style=flat-square&logo=gnubash)
+![Bash Version](https://img.shields.io/badge/Bash-3.2+-blue?style=flat-square&logo=gnubash)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)
 ![CI Status](https://github.com/PlatformStackPulse/git-repo-reconciler/actions/workflows/ci.yml/badge.svg)
 ![ShellCheck](https://img.shields.io/badge/ShellCheck-Passing-green?style=flat-square)
@@ -227,6 +227,8 @@ make test          # Run all tests
 make lint          # Run ShellCheck
 make fmt           # Format with shfmt
 make security      # Security checks
+make workflow-lint # Lint GitHub Actions workflows
+make check         # Run the complete non-destructive quality gate
 make clean         # Clean build artifacts
 make dev-setup     # Install dev tools + git hooks
 ```
@@ -239,7 +241,7 @@ Releases are automated via GitHub Actions. To publish a new version:
 
 1.  **Bump Version:** Go to the **Actions** tab in GitHub and select the **Update Version** workflow.
 2.  **Run Workflow:** Click **Run workflow**, choose the version bump type (patch, minor, or major), and run it on the `main` branch.
-3.  **Automated Release:** This will automatically create a new git tag. The **Release** workflow will then trigger to:
+3.  **Automated Release:** This creates an annotated git tag and explicitly dispatches the **Release** workflow, which will:
     *   Build the single portable binary.
     *   Generate a GitHub Release with the binary attached as an artifact.
     *   Publish a new Docker image to GitHub Container Registry (GHCR).
