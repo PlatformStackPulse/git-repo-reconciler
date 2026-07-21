@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 AS base
+FROM ubuntu:26.04 AS base
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     bash \
@@ -20,7 +20,7 @@ COPY Makefile .
 RUN chmod +x scripts/build.sh && scripts/build.sh
 
 # Runtime stage
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     bash \
